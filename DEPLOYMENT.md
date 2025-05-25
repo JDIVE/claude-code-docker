@@ -6,6 +6,34 @@
 - Git installed on the VM
 - Claude Code Max subscription (for authentication)
 
+## Included Tools
+
+The container comes pre-installed with a comprehensive development environment:
+
+### Core Tools
+- **Shell**: ZSH with syntax highlighting, autosuggestions, and completions
+- **Editor**: Neovim
+- **Multiplexer**: tmux
+- **Version Control**: Git with delta (better diffs), lazygit (TUI)
+- **Package Manager**: Node.js 20 LTS, Python 3 with pip, uv
+
+### CLI Enhancements
+- **eza**: Modern replacement for ls with icons
+- **bat**: Cat with syntax highlighting
+- **fd**: Fast alternative to find
+- **ripgrep**: Fast grep replacement
+- **fzf**: Fuzzy finder for files and commands
+- **zoxide**: Smarter cd command
+- **jq/yq**: JSON/YAML processors
+
+### Development Tools
+- **GitHub CLI**: Manage repos and PRs from terminal
+- **HTTPie**: User-friendly HTTP client
+- **shellcheck**: Shell script linter
+- **tldr**: Simplified man pages
+- **htop**: Interactive process viewer
+- **ncdu**: Disk usage analyzer
+
 ## Deployment Steps
 
 ### 1. Clone the Repository
@@ -35,7 +63,7 @@ chmod +x setup.sh entrypoint.sh
 
 ```bash
 # Access container
-docker exec -it claude-code /bin/bash
+docker exec -it claude-code /usr/bin/zsh
 
 # Login to Claude Code with your Max subscription
 claude login
@@ -49,7 +77,7 @@ claude login
 ### Interactive Session
 ```bash
 # Enter container for extended work
-docker exec -it claude-code /bin/bash
+docker exec -it claude-code /usr/bin/zsh
 
 # Use Claude Code normally
 claude "help me with this project"

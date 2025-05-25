@@ -1,0 +1,52 @@
+[user]
+    # These will be set by the user
+    # name = Your Name
+    # email = your.email@example.com
+
+[core]
+    editor = nvim
+    pager = delta
+    excludesfile = ~/.gitignore_global
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[push]
+    default = current
+
+[alias]
+    st = status
+    co = checkout
+    ci = commit
+    br = branch
+    lg = log --oneline --graph --decorate --all
+    last = log -1 HEAD
+    unstage = reset HEAD --
+    amend = commit --amend
+    aliases = config --get-regexp alias
+
+[color]
+    ui = auto
+
+[diff]
+    tool = vimdiff
+    colorMoved = default
+
+[merge]
+    tool = vimdiff
+    conflictstyle = diff3
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    line-numbers = true
+    side-by-side = true
+    syntax-theme = "Dracula"
+
+[credential]
+    helper = cache --timeout=3600

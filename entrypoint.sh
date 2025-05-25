@@ -17,9 +17,12 @@ if [ "$1" = "claude" ]; then
     exec claude "$@"
 else
     # Default: keep container running for exec access
-    echo "Claude Code container ready"
-    echo "Access with: docker exec -it claude-code /bin/bash"
+    echo "🚀 Claude Code Docker Environment Ready!"
+    echo ""
+    echo "Access with: docker exec -it claude-code /usr/bin/zsh"
     echo "Or run: docker exec -it claude-code claude [command]"
+    echo ""
+    echo "First time? Run: docker exec -it claude-code claude login"
     
     # Keep container alive
     while true; do
