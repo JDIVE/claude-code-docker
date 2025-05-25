@@ -1,10 +1,11 @@
-# Claude Code Docker Deployment on GCP
+# Claude Code Docker Deployment
 
 ## Prerequisites
 
-- GCP VM with Docker installed (with Compose plugin v2)
-- Git installed on the VM
+- Server/VM with Docker installed (with Compose plugin v2)
+- Git installed on the server
 - Claude Code Max subscription (for authentication)
+- (Optional) Cloudflare Tunnel for VS Code web access
 
 ## Included Tools
 
@@ -12,10 +13,11 @@ The container comes pre-installed with a comprehensive development environment:
 
 ### Core Tools
 - **Shell**: ZSH with syntax highlighting, autosuggestions, and completions
-- **Editor**: Neovim
+- **Editor**: Neovim + VS Code Server (browser-based)
 - **Multiplexer**: tmux
 - **Version Control**: Git with delta (better diffs), lazygit (TUI)
 - **Package Manager**: Node.js 20 LTS, Python 3 with pip, uv
+- **Claude Code**: Integrated in both terminal and VS Code
 
 ### CLI Enhancements
 - **eza**: Modern replacement for ls with icons
@@ -38,22 +40,20 @@ The container comes pre-installed with a comprehensive development environment:
 
 ### 1. Clone the Repository
 
-SSH into your GCP VM:
+SSH into your server and clone the repository:
 ```bash
-gcloud compute ssh YOUR_VM_NAME --zone=YOUR_ZONE
+git clone https://github.com/JDIVE/claude-code-docker.git
+cd claude-code-docker
 ```
 
-Clone and enter the repository:
-```bash
-git clone YOUR_REPO_URL claude-docker
-cd claude-docker
-```
-
-### 2. Run Setup
+### 2. Setup Network and Container
 
 ```bash
 # Make scripts executable
-chmod +x setup.sh entrypoint.sh
+chmod +x setup.sh docker-network-create.sh
+
+# Create shared Docker network
+./docker-network-create.sh
 
 # Run setup
 ./setup.sh
@@ -62,15 +62,19 @@ chmod +x setup.sh entrypoint.sh
 ### 3. First-Time Authentication
 
 ```bash
-# Access container
-docker exec -it claude-code /usr/bin/zsh
-
 # Login to Claude Code with your Max subscription
-claude login
+docker exec -it claude-code claude login
 
 # Follow the authentication prompts
 # Your credentials will be persisted in the claude-config volume
 ```
+
+### 4. Access VS Code Server (Optional)
+
+If using Cloudflare Tunnel:
+- Navigate to your configured domain
+- Authenticate via Cloudflare Access
+- VS Code opens in your browser with Claude integration
 
 ## Usage
 
@@ -92,8 +96,9 @@ docker exec -it claude-code claude code "add error handling"
 
 ## Persistent Data
 
-- **Configuration**: Stored in `claude-config` volume (includes authentication)
-- **Workspace**: Mounted from `./workspace` directory
+- **Claude Configuration**: Stored in `claude-config` volume
+- **VS Code Configuration**: Stored in `code-server-config` volume
+- **Working Directory**: `/home/jamie` (mount project directories as needed)
 
 ## Maintenance
 
@@ -122,12 +127,16 @@ The container needs access to:
 - statsig.anthropic.com  
 - sentry.io
 
+For Cloudflare Tunnel setup:
+- Configure tunnel to route to `container-name:8443`
+- Set up Cloudflare Access for authentication
+
 ## Performance Tips
 
 1. Mount projects directly:
    ```yaml
    volumes:
-     - /path/to/your/project:/home/jamie/workspace/project
+     - /path/to/your/project:/home/jamie/project
    ```
 
 2. Resource limits in docker-compose.yml:
