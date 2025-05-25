@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   claude-code:
     build: .
@@ -12,10 +10,15 @@ services:
     volumes:
       # Persist Claude Code configuration
       - claude-config:/home/jamie/.config/claude-code
-      # Mount your workspace
-      - ./workspace:/home/jamie/workspace
+      # Persist code-server configuration
+      - code-server-config:/home/jamie/.config/code-server
+      # Mount any project directories as needed, e.g.:
+      # - /path/to/project:/home/jamie/project
     networks:
-      - claude-net
+      - openshaw-services
+    ports:
+      - "127.0.0.1:8443:8443"  # Only expose locally
+    working_dir: /home/jamie
     restart: unless-stopped
     stdin_open: true
     tty: true
@@ -23,7 +26,9 @@ services:
 volumes:
   claude-config:
     driver: local
+  code-server-config:
+    driver: local
 
 networks:
-  claude-net:
-    driver: bridge
+  openshaw-services:
+    external: true

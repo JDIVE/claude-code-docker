@@ -73,6 +73,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Install Claude Code globally
 RUN npm install -g @anthropic-ai/claude-code
 
+# Install code-server
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
 # Install Python tools
 RUN pip3 install --break-system-packages \
     uv \
@@ -85,21 +88,30 @@ RUN useradd -m -s /usr/bin/zsh jamie \
 
 # Create necessary directories
 RUN mkdir -p /home/jamie/.config/claude-code \
-    && mkdir -p /home/jamie/workspace \
+    && mkdir -p /home/jamie/.config/code-server \
     && mkdir -p /home/jamie/.local/bin \
     && chown -R jamie:jamie /home/jamie
+
+# Create code-server config with no auth
+RUN echo "bind-addr: 0.0.0.0:8443" > /home/jamie/.config/code-server/config.yaml && \
+    echo "auth: none" >> /home/jamie/.config/code-server/config.yaml && \
+    echo "cert: false" >> /home/jamie/.config/code-server/config.yaml && \
+    chown jamie:jamie /home/jamie/.config/code-server/config.yaml
 
 # Copy configuration files
 COPY --chown=jamie:jamie zshrc /home/jamie/.zshrc
 COPY --chown=jamie:jamie gitconfig /home/jamie/.gitconfig
 
 # Copy entrypoint script
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint-combined.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Expose code-server port
+EXPOSE 8443
 
 # Switch to jamie user
 USER jamie
-WORKDIR /home/jamie/workspace
+WORKDIR /home/jamie
 
 # Install ZSH plugins
 RUN git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions /home/jamie/.zsh/zsh-autosuggestions && \
