@@ -50,8 +50,8 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
     && rm -rf /var/lib/apt/lists/*
 
 # Install additional tools from GitHub releases
-RUN curl -L https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-musl_10.2.0_amd64.deb -o fd.deb && \
-    dpkg -i fd.deb && rm fd.deb && \
+# Note: fd-find is already installed via apt, just create symlink
+RUN ln -s $(which fdfind) /usr/local/bin/fd && \
     curl -L https://github.com/eza-community/eza/releases/latest/download/eza_$(uname -m)-unknown-linux-gnu.tar.gz | tar -xz -C /usr/local/bin && \
     curl -L https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po '"tag_name": "v\K[^"]*')_Linux_x86_64.tar.gz | tar -xz -C /usr/local/bin lazygit && \
     curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq && \
