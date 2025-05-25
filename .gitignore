@@ -1,0 +1,14 @@
+# Workspace directory
+workspace/
+
+# Backup files
+*.tar.gz
+*.backup
+*.bak
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

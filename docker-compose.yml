@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  claude-code:
+    build: .
+    container_name: claude-code
+    hostname: claude-code
+    environment:
+      - LANG=en_GB.UTF-8
+      - LANGUAGE=en_GB:en
+      - LC_ALL=en_GB.UTF-8
+    volumes:
+      # Persist Claude Code configuration
+      - claude-config:/home/jamie/.config/claude-code
+      # Mount your workspace
+      - ./workspace:/home/jamie/workspace
+    networks:
+      - claude-net
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  claude-config:
+    driver: local
+
+networks:
+  claude-net:
+    driver: bridge
