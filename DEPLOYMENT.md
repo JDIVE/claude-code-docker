@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- GCP VM with Docker and Docker Compose installed
+- GCP VM with Docker installed (with Compose plugin v2)
 - Git installed on the VM
 - Claude Code Max subscription (for authentication)
 
@@ -100,13 +100,13 @@ docker exec -it claude-code claude code "add error handling"
 ### Pull Latest Changes
 ```bash
 git pull
-docker-compose build --no-cache
-docker-compose up -d
+docker compose build --no-cache
+docker compose up -d
 ```
 
 ### View Logs
 ```bash
-docker-compose logs -f claude-code
+docker compose logs -f claude-code
 ```
 
 ### Backup Configuration
@@ -155,4 +155,4 @@ docker exec -it claude-code sudo chown -R jamie:jamie /home/jamie
 Re-run `claude login` inside the container
 
 ### Container not starting:
-Check logs with `docker-compose logs claude-code`
+Check logs with `docker compose logs claude-code`

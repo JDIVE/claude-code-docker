@@ -11,11 +11,11 @@ mkdir -p workspace
 
 # Build the Docker image
 echo "Building Docker image..."
-docker-compose build
+docker compose build
 
 # Create and start the container
 echo "Starting container..."
-docker-compose up -d
+docker compose up -d
 
 echo ""
 echo "✅ Setup complete!"

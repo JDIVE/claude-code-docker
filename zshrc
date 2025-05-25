@@ -101,7 +101,7 @@ alias path="echo $PATH | tr ':' '\n'"
 alias c="clear"
 
 # Docker shortcuts
-alias dc="docker-compose"
+alias dc="docker compose"
 alias dps="docker ps"
 alias dpsa="docker ps -a"
 alias dimg="docker images"

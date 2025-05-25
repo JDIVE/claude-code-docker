@@ -82,7 +82,7 @@ docker exec -it claude-code claude "explain this code"
 
 ## Requirements
 
-- Docker and Docker Compose
+- Docker with Compose plugin (v2)
 - Claude Code Max subscription
 - Network access to:
   - api.anthropic.com
