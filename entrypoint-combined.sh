@@ -16,8 +16,13 @@ trap cleanup SIGTERM SIGINT
 # Start code-server in background
 echo "🚀 Starting code-server..."
 # Start code-server as jamie user with no auth
-su - jamie -c "code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry" &
-CODE_SERVER_PID=$!
+if [ "$(whoami)" = "jamie" ]; then
+    code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry &
+    CODE_SERVER_PID=$!
+else
+    su jamie -c "code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry" &
+    CODE_SERVER_PID=$!
+fi
 echo "✅ code-server started on port 8443 (no auth - protected by Cloudflare Access)"
 
 # Check if claude command is passed directly
