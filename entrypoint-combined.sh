@@ -2,28 +2,8 @@
 
 # Claude Code Docker Entrypoint with code-server
 
-# Function to handle signals
-cleanup() {
-    echo "Received signal, shutting down services..."
-    if [ -n "$CODE_SERVER_PID" ]; then
-        kill $CODE_SERVER_PID
-    fi
-    exit 0
-}
-
-trap cleanup SIGTERM SIGINT
-
-# Start code-server in background
-echo "🚀 Starting code-server..."
-# Start code-server as jamie user with no auth
-if [ "$(whoami)" = "jamie" ]; then
-    code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry &
-    CODE_SERVER_PID=$!
-else
-    su jamie -c "code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry" &
-    CODE_SERVER_PID=$!
-fi
-echo "✅ code-server started on port 8443 (no auth - protected by Cloudflare Access)"
+# Kill any existing code-server processes
+pkill -f code-server 2>/dev/null || true
 
 # Check if claude command is passed directly
 if [ "$1" = "claude" ]; then
@@ -31,7 +11,10 @@ if [ "$1" = "claude" ]; then
     shift
     exec claude "$@"
 else
-    # Default: keep container running for exec access
+    # Default: start code-server as main process
+    echo "🚀 Starting code-server..."
+    echo "✅ code-server will be available on port 8443 (no auth - protected by Cloudflare Access)"
+    echo ""
     echo "🚀 Claude Code Docker Environment Ready!"
     echo ""
     echo "Access options:"
@@ -40,9 +23,8 @@ else
     echo "- Claude: docker exec -it claude-code claude [command]"
     echo ""
     echo "First time? Run: docker exec -it claude-code claude login"
+    echo ""
     
-    # Keep container alive
-    while true; do
-        sleep 3600
-    done
+    # Start code-server as the main process (PID 1)
+    exec code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry
 fi
