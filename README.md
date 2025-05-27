@@ -28,6 +28,13 @@ docker exec -it claude-code claude login
 - **Development Tools**: Complete CLI toolkit for modern development
 - **Shared Environment**: VS Code and Claude Code in the same container
 
+## Security Notice
+
+⚠️ **Important**: VS Code Server runs without authentication by default. The container binds to `localhost:8443` only. 
+- **DO NOT** expose port 8443 publicly without authentication
+- Use SSH tunneling or Cloudflare Access for remote access
+- See DEPLOYMENT.md for secure remote access setup
+
 ## Included Tools
 
 ### Core Development

@@ -2,8 +2,9 @@
 
 # Claude Code Docker Entrypoint with code-server
 
-# Kill any existing code-server processes
+# Kill any existing code-server processes and wait for cleanup
 pkill -f code-server 2>/dev/null || true
+sleep 1  # Give processes time to clean up
 
 # Check if claude command is passed directly
 if [ "$1" = "claude" ]; then

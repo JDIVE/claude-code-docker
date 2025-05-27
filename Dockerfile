@@ -4,7 +4,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies and development tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     # Basic utilities
     curl \
     wget \
@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GitHub CLI
@@ -46,7 +47,8 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
     && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && apt-get update \
-    && apt-get install -y gh \
+    && apt-get install -y --no-install-recommends gh \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install additional tools from GitHub releases
@@ -67,7 +69,8 @@ ENV LC_ALL=en_GB.UTF-8
 
 # Install Node.js 20 (LTS)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
+    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Claude Code globally

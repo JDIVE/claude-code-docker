@@ -3,6 +3,7 @@ services:
     build: .
     container_name: claude-code
     hostname: claude-code
+    init: true  # This prevents zombie processes
     environment:
       - LANG=en_GB.UTF-8
       - LANGUAGE=en_GB:en
